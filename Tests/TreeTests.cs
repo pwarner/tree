@@ -23,8 +23,30 @@ namespace BinaryTree
             AssertTreeIsBalanced(tree);
         }
 
+        [Theory]
+        [InlineData(1, 2, 3)]
+        [InlineData(2, 1, 3)]
+        [InlineData(2, 3, 1)]
+        [InlineData(3, 2, 1)]
+        [InlineData(3, 1, 2)]
+        [InlineData(1, 3, 2)]
+
+        public void SequenceTest(int a, int b, int c)
+        {
+            var tree = new Tree<int> {a, b, c};
+            Assert.Equal(2, tree.Root.Value);
+            Assert.Equal(1, tree.Root.Left.Value);
+            Assert.Equal(3, tree.Root.Right.Value);
+        }
+
         [Fact]
-        public void RandomBalanceTest()
+        public void RandomSequenceTest()
+        {
+            UseRandomSequence();
+            UseRandomSequence();
+            UseRandomSequence();
+        }
+        private void UseRandomSequence()
         {
             var rand = new Random();
             var tree = new Tree<int>();

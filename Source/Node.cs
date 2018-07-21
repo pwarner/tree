@@ -24,33 +24,54 @@ namespace BinaryTree
 
         public Node<T> Add(T value)
         {
-            if (Comparer.Compare(value, Value) < 0)
+            Weight++;
+            return Comparer.Compare(value, Value) < 0
+                ? AddLeft(value)
+                : AddRight(value);
+        }
+
+        private Node<T> AddLeft(T value)
+        {
+            if (Left != null)
             {
-                Left = Left?.Add(value) ?? new Node<T>(value);
+                Left = Left.Add(value);
+
+                if (Left.LeftWeight > RightWeight)
+                    return BalanceLeft();
+
+                if (Left.RightWeight > RightWeight)
+                    return Left.Add(Value);
             }
             else
             {
-                Right = Right?.Add(value) ?? new Node<T>(value);
+                Left = new Node<T>(value);
             }
 
-            Weight++;
+            return this;
+        }
 
-            return BalanceIfRequired();
+        private Node<T> AddRight(T value)
+        {
+            if (Right != null)
+            {
+                Right = Right.Add(value);
+
+                if (Right.RightWeight > LeftWeight)
+                    return BalanceRight();
+
+                if (Right.LeftWeight > LeftWeight)
+                    return Right.Add(Value);
+            }
+            else
+            {
+                Right = new Node<T>(value);
+            }
+
+            return this;
         }
 
         public override string ToString() => Value.ToString();
 
-        private Node<T> BalanceIfRequired()
-        {
-            int leftGrandChildWeight = Left?.LeftWeight ?? 0;
-            int rightGrandChildWeight = Right?.RightWeight ?? 0;
-
-            return leftGrandChildWeight > RightWeight
-                ? BalanceLeft()
-                : rightGrandChildWeight > LeftWeight
-                    ? BalanceRight()
-                    : this;
-        }
 
         private Node<T> BalanceRight() =>
             new Node<T>(Right.Value, new Node<T>(Value, Left, Right.Left), Right.Right);
