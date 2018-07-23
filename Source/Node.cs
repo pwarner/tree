@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BinaryTree
+namespace BalancingBinaryTree
 {
     public sealed class Node<T>
     {
@@ -11,72 +11,77 @@ namespace BinaryTree
             Value = value;
             Left = left;
             Right = right;
-            Weight = 1 + LeftWeight + RightWeight;
+            Count = 1 + LeftCount + RightCount;
         }
 
-        public int Weight { get; private set; }
+        public int Count { get; private set; }
+
         public Node<T> Left { get; private set; }
+
         public Node<T> Right { get; private set; }
+
         public T Value { get; }
 
-        private int LeftWeight => Left?.Weight ?? 0;
-        private int RightWeight => Right?.Weight ?? 0;
+        private int LeftCount => Left?.Count ?? 0;
 
-        public Node<T> Add(T value)
-        {
-            Weight++;
-            return Comparer.Compare(value, Value) < 0
-                ? AddLeft(value)
-                : AddRight(value);
-        }
-
-        private Node<T> AddLeft(T value)
-        {
-            if (Left != null)
-            {
-                Left = Left.Add(value);
-
-                if (Left.LeftWeight > RightWeight)
-                    return BalanceLeft();
-
-                if (Left.RightWeight > RightWeight)
-                    return Left.Add(Value);
-            }
-            else
-            {
-                Left = new Node<T>(value);
-            }
-
-            return this;
-        }
-
-        private Node<T> AddRight(T value)
-        {
-            if (Right != null)
-            {
-                Right = Right.Add(value);
-
-                if (Right.RightWeight > LeftWeight)
-                    return BalanceRight();
-
-                if (Right.LeftWeight > LeftWeight)
-                    return Right.Add(Value);
-            }
-            else
-            {
-                Right = new Node<T>(value);
-            }
-
-            return this;
-        }
+        private int RightCount => Right?.Count ?? 0;
 
         public override string ToString() => Value.ToString();
 
+        internal Node<T> Add(Node<T> child)
+        {
+            Count++;
+            return Comparer.Compare(child.Value, Value) < 0
+                ? AddLeft(child)
+                : AddRight(child);
+        }
 
-        private Node<T> BalanceRight() =>
-            new Node<T>(Right.Value, new Node<T>(Value, Left, Right.Left), Right.Right);
+        private Node<T> AddLeft(Node<T> node)
+        {
+            if (Left != null)
+            {
+                Left = Left.Add(node);
 
-        private Node<T> BalanceLeft() =>
-            new Node<T>(Left.Value, Left.Left, new Node<T>(Value, Left.Right, Right));
+                if (Left.LeftCount > RightCount)
+                {
+                    return new Node<T>(Left.Value, Left.Left, new Node<T>(Value, Left.Right, Right));
+                }
+
+                if (Left.RightCount > RightCount)
+                {
+                    return Left.Add(new Node<T>(Value, null, Right));
+                }
+            }
+            else
+            {
+                Left = node;
+            }
+
+            return this;
+        }
+
+        private Node<T> AddRight(Node<T> node)
+        {
+            if (Right != null)
+            {
+                Right = Right.Add(node);
+
+                if (Right.RightCount > LeftCount)
+                {
+                    return new Node<T>(Right.Value, new Node<T>(Value, Left, Right.Left), Right.Right);
+                }
+
+                if (Right.LeftCount > LeftCount)
+                {
+                    return Right.Add(new Node<T>(Value, Left, null));
+                }
+            }
+            else
+            {
+                Right = node;
+            }
+
+            return this;
+        }
     }
 }

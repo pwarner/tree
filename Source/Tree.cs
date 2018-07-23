@@ -2,13 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BinaryTree
+namespace BalancingBinaryTree
 {
     public sealed class Tree<T> : IEnumerable<T>
     {
-        public Node<T> Root { get; private set; }
+        public Tree(IEnumerable<T> values)
+        {
+            foreach (T value in values)
+            {
+                var node = new Node<T>(value);
+                Root = Root?.Add(node) ?? node;
+            }
+        }
 
-        public int Count => Root?.Weight ?? 0;
+        public Tree(params T[] args) : this((IEnumerable<T>) args)
+        {
+        }
+
+        public Node<T> Root { get; }
+
+        public int Count => Root?.Count ?? 0;
 
         public IEnumerator<T> GetEnumerator() =>
             GetNodes(Root).Select(x => x.Value).GetEnumerator();
@@ -16,19 +29,6 @@ namespace BinaryTree
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public void Add(T value)
-        {
-            Root = Root?.Add(value) ?? new Node<T>(value);
-        }
-
-        public void Add(IEnumerable<T> values)
-        {
-            foreach (T value in values)
-            {
-                Add(value);
-            }
         }
 
         private static IEnumerable<Node<T>> GetNodes(Node<T> current) =>

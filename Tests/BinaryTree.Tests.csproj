@@ -5,7 +5,9 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>BinaryTree</RootNamespace>
+    <RootNamespace>BalancingBinaryTree</RootNamespace>
+
+    <AssemblyName>BalancingBinaryTree.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Source\BinaryTree.csproj" />
+    <ProjectReference Include="..\Source\BalancingBinaryTree.csproj" />
   </ItemGroup>
 
 </Project>
