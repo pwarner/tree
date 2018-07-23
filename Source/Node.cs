@@ -40,22 +40,10 @@ namespace BalancingBinaryTree
         {
             if (Left != null)
             {
-                Left = Left.Add(node);
-
-                if (Left.LeftCount > RightCount)
-                {
-                    return new Node<T>(Left.Value, Left.Left, new Node<T>(Value, Left.Right, Right));
-                }
-
-                if (Left.RightCount > RightCount)
-                {
-                    return Left.Add(new Node<T>(Value, null, Right));
-                }
+                return BalanceLeft(node);
             }
-            else
-            {
-                Left = node;
-            }
+
+            Left = node;
 
             return this;
         }
@@ -64,24 +52,57 @@ namespace BalancingBinaryTree
         {
             if (Right != null)
             {
-                Right = Right.Add(node);
-
-                if (Right.RightCount > LeftCount)
-                {
-                    return new Node<T>(Right.Value, new Node<T>(Value, Left, Right.Left), Right.Right);
-                }
-
-                if (Right.LeftCount > LeftCount)
-                {
-                    return Right.Add(new Node<T>(Value, Left, null));
-                }
+                return BalanceRight(node);
             }
-            else
+
+            Right = node;
+
+            return this;
+        }
+
+        private Node<T> BalanceLeft(Node<T> node)
+        {
+            Left = Left.Add(node);
+            Node<T> displaced = Left.Right;
+
+            if (Left.LeftCount > RightCount)
             {
-                Right = node;
+                return Left.ChangeRight(ChangeLeft(displaced));
+            }
+
+            if (Left.RightCount > RightCount)
+            {
+                return new Node<T>(
+                    displaced.Value,
+                    Left.ChangeRight(displaced.Left),
+                    ChangeLeft(displaced.Right)
+                );
             }
 
             return this;
         }
+
+        private Node<T> BalanceRight(Node<T> node)
+        {
+            Right = Right.Add(node);
+            Node<T> displaced = Right.Left;
+
+            if (Right.RightCount > LeftCount)
+            {
+                return Right.ChangeLeft(ChangeRight(displaced));
+            }
+
+            if (Right.LeftCount > LeftCount)
+            {
+                return new Node<T>(displaced.Value,
+                    ChangeRight(displaced.Left),
+                    Right.ChangeLeft(displaced.Right));
+            }
+
+            return this;
+        }
+
+        private Node<T> ChangeLeft(Node<T> newLeft) => new Node<T>(Value, newLeft, Right);
+        private Node<T> ChangeRight(Node<T> newRight) => new Node<T>(Value, Left, newRight);
     }
 }
