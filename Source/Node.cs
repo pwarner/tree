@@ -24,20 +24,6 @@ namespace BalancingBinaryTree
 
         private int RightCount => Right?.Count ?? 0;
 
-        public Node<T> FindNearest(T value) =>
-            Tree<T>.Comparer.Compare(value, Value) == 0
-                ? this
-                : Comparer<T>.Default.Compare(value, Value) < 0
-                    ? Left?.FindNearest(value) ?? this
-                    : Right?.FindNearest(value) ?? this;
-
-        public Node<T> Find(T value) =>
-            Tree<T>.Comparer.Compare(value, Value) == 0
-                ? this
-                : Comparer<T>.Default.Compare(value, Value) < 0
-                    ? Left?.Find(value)
-                    : Right?.Find(value);
-
         public override string ToString() => Value.ToString();
 
         internal Node<T> Add(Node<T> child)

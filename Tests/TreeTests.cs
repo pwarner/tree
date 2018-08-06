@@ -78,15 +78,15 @@ namespace BalancingBinaryTree
         {
             var tree = new Tree<int>(2, 6, 7, 3, 5, 1, 4);
 
-            var node1 = tree.FindNode(1);
+            var node1 = tree.Find(1);
             Assert.NotNull(node1);
             Assert.Same(tree.Root.Left.Left, node1);
 
-            var node7 = tree.FindNode(7);
+            var node7 = tree.Find(7);
             Assert.NotNull(node7);
             Assert.Same(tree.Root.Right.Right, node7);
 
-            var node4 = tree.FindNode(4);
+            var node4 = tree.Find(4);
             Assert.NotNull(node4);
             Assert.Same(tree.Root.Right.Left.Left, node4);
         }
@@ -95,7 +95,7 @@ namespace BalancingBinaryTree
         public static void FindMissingValueReturnsNull()
         {
             var tree = new Tree<int>(2, 6, 7, 3, 5, 1, 4);
-            var node11 = tree.FindNode(11);
+            var node11 = tree.Find(11);
             Assert.Null(node11);
         }
 
@@ -103,7 +103,7 @@ namespace BalancingBinaryTree
         public static void FindsNearestNodeIfValueNotPresent()
         {
             var tree = new Tree<int>(4, 9, 1, 8, 5, 2, 3, 6);
-            var node7 = tree.FindNearestNode(7);
+            var node7 = tree.FindNearest(7);
 
             Assert.NotNull(node7);
             Assert.Equal(6, node7.Value);

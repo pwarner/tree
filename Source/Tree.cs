@@ -34,9 +34,9 @@ namespace BalancingBinaryTree
             return GetEnumerator();
         }
 
-        public Node<T> FindNode(T value) => Root.Find(value);
+        public Node<T> Find(T value) => Find(Root, value);
 
-        public Node<T> FindNearestNode(T value) => Root.FindNearest(value);
+        public Node<T> FindNearest(T value) => FindNearest(Root, value);
 
         public IEnumerable<Node<T>> GetRange(T min, T max) => GetRange(Root, min, max);
 
@@ -57,5 +57,23 @@ namespace BalancingBinaryTree
                 : GetNodes(current.Left)
                     .Union(new[] {current})
                     .Union(GetNodes(current.Right));
+
+        private static Node<T> Find(Node<T> current, T value) =>
+            current == null
+                ? null
+                : Comparer.Compare(value, current.Value) == 0
+                    ? current
+                    : Comparer.Compare(value, current.Value) < 0
+                        ? Find(current.Left, value)
+                        : Find(current.Right, value);
+
+        private static Node<T> FindNearest(Node<T> current, T value) =>
+            current == null
+                ? null
+                : Comparer.Compare(value, current.Value) == 0
+                    ? current
+                    : Comparer<T>.Default.Compare(value, current.Value) < 0
+                        ? FindNearest(current.Left, value) ?? current
+                        : FindNearest(current.Right, value) ?? current;
     }
 }
