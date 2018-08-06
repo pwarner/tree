@@ -4,8 +4,6 @@ namespace BalancingBinaryTree
 {
     public sealed class Node<T>
     {
-        private static readonly IComparer<T> Comparer = Comparer<T>.Default;
-
         internal Node(T value, Node<T> left = null, Node<T> right = null)
         {
             Value = value;
@@ -26,12 +24,30 @@ namespace BalancingBinaryTree
 
         private int RightCount => Right?.Count ?? 0;
 
+        public Node<T> FindNearest(T value) =>
+            Tree<T>.Comparer.Compare(value, Value) == 0
+                ? this
+                : Comparer<T>.Default.Compare(value, Value) < 0
+                    ? Left?.FindNearest(value) ?? this
+                    : Comparer<T>.Default.Compare(value, Value) > 0
+                        ? Right?.FindNearest(value) ?? this
+                        : this;
+
+        public Node<T> Find(T value) =>
+            Tree<T>.Comparer.Compare(value, Value) == 0
+                ? this
+                : Comparer<T>.Default.Compare(value, Value) < 0
+                    ? Left?.Find(value)
+                    : Comparer<T>.Default.Compare(value, Value) > 0
+                        ? Right?.Find(value)
+                        : null;
+
         public override string ToString() => Value.ToString();
 
         internal Node<T> Add(Node<T> child)
         {
             Count++;
-            return Comparer.Compare(child.Value, Value) < 0
+            return Tree<T>.Comparer.Compare(child.Value, Value) < 0
                 ? AddLeft(child)
                 : AddRight(child);
         }
@@ -63,7 +79,7 @@ namespace BalancingBinaryTree
         private Node<T> BalanceLeft(Node<T> node)
         {
             Left = Left.Add(node);
-            Node<T> displaced = Left.Right;
+            var displaced = Left.Right;
 
             if (Left.LeftCount > RightCount)
             {
@@ -85,7 +101,7 @@ namespace BalancingBinaryTree
         private Node<T> BalanceRight(Node<T> node)
         {
             Right = Right.Add(node);
-            Node<T> displaced = Right.Left;
+            var displaced = Right.Left;
 
             if (Right.RightCount > LeftCount)
             {

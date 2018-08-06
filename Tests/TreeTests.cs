@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -46,14 +45,14 @@ namespace BalancingBinaryTree
         {
             var rand = new Random();
 
-            int[] expected = Enumerable.Range(1, 20).ToArray();
+            var expected = Enumerable.Range(1, 20).ToArray();
 
-            IEnumerable<int> randomSequence = expected
+            var randomSequence = expected
                 .Select(v => new {Value = v, Rank = rand.Next()})
                 .OrderBy(x => x.Rank)
                 .Select(x => x.Value);
 
-            int[] actual = new Tree<int>(randomSequence).ToArray();
+            var actual = new Tree<int>(randomSequence).ToArray();
 
             Assert.Equal(expected, actual);
         }
@@ -72,6 +71,57 @@ namespace BalancingBinaryTree
             Assert.Equal(5, tree.Root.Right.Left.Value);
             Assert.Equal(7, tree.Root.Right.Right.Value);
             Assert.Equal(4, tree.Root.Right.Left.Left.Value);
+        }
+
+        [Fact]
+        public static void CanFindNode()
+        {
+            var tree = new Tree<int>(2, 6, 7, 3, 5, 1, 4);
+
+            var node1 = tree.FindNode(1);
+            Assert.NotNull(node1);
+            Assert.Same(tree.Root.Left.Left, node1);
+
+            var node7 = tree.FindNode(7);
+            Assert.NotNull(node7);
+            Assert.Same(tree.Root.Right.Right, node7);
+
+            var node4 = tree.FindNode(4);
+            Assert.NotNull(node4);
+            Assert.Same(tree.Root.Right.Left.Left, node4);
+        }
+
+        [Fact]
+        public static void FindMissingValueReturnsNull()
+        {
+            var tree = new Tree<int>(2, 6, 7, 3, 5, 1, 4);
+            var node11 = tree.FindNode(11);
+            Assert.Null(node11);
+        }
+
+        [Fact]
+        public static void FindsNearestNodeIfValueNotPresent()
+        {
+            var tree = new Tree<int>(4, 9, 1, 8, 5, 2, 3, 6);
+            var node7 = tree.FindNearestNode(7);
+
+            Assert.NotNull(node7);
+            Assert.Equal(6, node7.Value);
+        }
+
+        [Fact]
+        public static void CanSeekForRangeOfNodes()
+        {
+            var tree = new Tree<int>(4, 9, 1, 8, 5, 2, 3, 6);
+            var nodes = tree.GetRange(0, 7).ToArray();
+
+            Assert.Equal(6, nodes.Length);
+            Assert.Equal(1, nodes[0].Value);
+            Assert.Equal(2, nodes[1].Value);
+            Assert.Equal(3, nodes[2].Value);
+            Assert.Equal(4, nodes[3].Value);
+            Assert.Equal(5, nodes[4].Value);
+            Assert.Equal(6, nodes[5].Value);
         }
 
         private static void AssertTreeIsBalanced(Tree<int> tree)
