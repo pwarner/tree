@@ -29,18 +29,14 @@ namespace BalancingBinaryTree
                 ? this
                 : Comparer<T>.Default.Compare(value, Value) < 0
                     ? Left?.FindNearest(value) ?? this
-                    : Comparer<T>.Default.Compare(value, Value) > 0
-                        ? Right?.FindNearest(value) ?? this
-                        : this;
+                    : Right?.FindNearest(value) ?? this;
 
         public Node<T> Find(T value) =>
             Tree<T>.Comparer.Compare(value, Value) == 0
                 ? this
                 : Comparer<T>.Default.Compare(value, Value) < 0
                     ? Left?.Find(value)
-                    : Comparer<T>.Default.Compare(value, Value) > 0
-                        ? Right?.Find(value)
-                        : null;
+                    : Right?.Find(value);
 
         public override string ToString() => Value.ToString();
 
