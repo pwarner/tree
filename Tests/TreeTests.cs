@@ -110,18 +110,16 @@ namespace BalancingBinaryTree
         }
 
         [Fact]
-        public static void CanSeekForRangeOfNodes()
+        public static void CanGetRangeOfNodes()
         {
             var tree = new Tree<int>(4, 9, 1, 8, 5, 2, 3, 6);
-            var nodes = tree.GetRange(0, 7).ToArray();
+            var nodes = tree.GetRange(3, 7).ToArray();
 
-            Assert.Equal(6, nodes.Length);
-            Assert.Equal(1, nodes[0].Value);
-            Assert.Equal(2, nodes[1].Value);
-            Assert.Equal(3, nodes[2].Value);
-            Assert.Equal(4, nodes[3].Value);
-            Assert.Equal(5, nodes[4].Value);
-            Assert.Equal(6, nodes[5].Value);
+            Assert.Equal(4, nodes.Length);
+            Assert.Equal(3, nodes[0].Value);
+            Assert.Equal(4, nodes[1].Value);
+            Assert.Equal(5, nodes[2].Value);
+            Assert.Equal(6, nodes[3].Value);
         }
 
         private static void AssertTreeIsBalanced(Tree<int> tree)

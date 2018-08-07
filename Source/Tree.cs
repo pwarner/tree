@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,13 +25,9 @@ namespace BalancingBinaryTree
 
         public int Count => Root?.Count ?? 0;
 
-        public IEnumerator<T> GetEnumerator() =>
-            GetNodes(Root).Select(x => x.Value).GetEnumerator();
+        public IEnumerator<T> GetEnumerator() => GetNodes(Root).Select(x => x.Value).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public Node<T> Find(T value) => Find(Root, value);
 
@@ -41,15 +36,15 @@ namespace BalancingBinaryTree
         public IEnumerable<Node<T>> GetRange(T min, T max) => GetRange(Root, min, max);
 
         private static IEnumerable<Node<T>> GetRange(Node<T> current, T min, T max) =>
-            GetNodes(current, x => Comparer.Compare(x, min) >= 0 && Comparer.Compare(x, max) <= 0);
-
-        private static IEnumerable<Node<T>> GetNodes(Node<T> current, Predicate<T> filter) =>
             current == null
                 ? Enumerable.Empty<Node<T>>()
-                : GetNodes(current.Left, filter)
-                    .Union(!filter(current.Value)
-                        ? new Node<T>[0]
-                        : new[] {current}.Union(GetNodes(current.Right, filter)));
+                : Comparer.Compare(current.Value, min) < 0
+                    ? GetRange(current.Right, min, max)
+                    : Comparer.Compare(current.Value, max) > 0
+                        ? GetRange(current.Left, min, max)
+                        : GetRange(current.Left, min, max)
+                            .Union(new[] {current})
+                            .Union(GetRange(current.Right, min, max));
 
         private static IEnumerable<Node<T>> GetNodes(Node<T> current) =>
             current == null
