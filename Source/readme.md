@@ -1,4 +1,4 @@
-﻿### Balancing Binary Tree
+﻿### A self-balancing Binary Tree
 
 An implementation of a generic self-balancing binary tree targeting .Net Standard 2.
 
