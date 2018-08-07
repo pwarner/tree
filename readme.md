@@ -16,7 +16,7 @@ The node *B*, and nodes to the left of *B* get one 'step' closer to the root con
 
 ![rebalancing nodes diagram][nodes]
 
-[nodes]: ../assets/balancing.jpg
+[nodes]: ./assets/balancing.jpg
 
 ### Notes
 
