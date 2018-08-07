@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Source\BalancingBinaryTree.csproj" />
+    <ProjectReference Include="..\source\BalancingBinaryTree.csproj" />
   </ItemGroup>
 
 </Project>
